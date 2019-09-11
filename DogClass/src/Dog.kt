@@ -37,7 +37,7 @@ class Dog(val name: String,
     var weight = weight_param
 
         set(value) {
- 
+
             if (value > 0) field = value
 
         }
