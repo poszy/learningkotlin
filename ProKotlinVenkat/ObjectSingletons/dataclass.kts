@@ -41,7 +41,7 @@ println("Id: $id1 Assigned: $isAssigned") //Id: 1 Assigned: true
 
     It makes sense for the primary constructor to take only properties.
 
-    You want to easily extract data from the object using the destructuring facility (be aware that the extraction is based on the order of properties and not their names). 
+    You want to easily extract data from the object using the destructuring facility (be aware that the extraction is based on the order of properties and not their names).
 *
 *
 * */
