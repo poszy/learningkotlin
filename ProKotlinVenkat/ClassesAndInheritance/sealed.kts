@@ -23,6 +23,7 @@ class Pip(suit: String, val number: Int) : Card(suit) {
 }
 
 
+
 fun process(card: Card) = when (card) {
     is Ace -> "${card.javaClass.name} of ${card.suit}"
     is King, is Queen, is Jack -> "$card"
