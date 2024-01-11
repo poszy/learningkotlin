@@ -36,6 +36,34 @@ open class Person4( var name : String, var age : Int){
         return "Person4(name='$name', age=$age)"
     }
 }
+
+// data classes will genereate toString() hjasCode() equals() copy(). no need to override
+// also componentN() ... componentN(), where each N is a parameter. in order
+data class Person5(val name: String, val age : Int) // in this case Component 1= name
+
+open class Mammal (var name : String)
+open class Cat (name : String) : Mammal(name)
+
+
+abstract class Mammal (var name : String) // cannot create instances of abstract classes.
+open class Cat (name : String) : Mammal(name)
+
+
+
+open class someFoosubclass : Foo1 (){}
+// abstract class - cannot create instances
+//    if class has abstract functions or properties, class MUST be abstract
+abstract class Foo1 {
+    abstract fun foo()
+    abstract val name: String
+}
+
+open class SomeFooSubclass1(override val name: String) : Foo1() {
+    override fun foo() {
+        TODO("Not yet implemented")
+    }
+}
+
 fun main(args : Array<String>){
     // Person person = new Person()
     val person = Person()// with val, the reference to this person objec will never change
@@ -55,4 +83,54 @@ fun main(args : Array<String>){
     println("-------------------------")
 
 
+    // so we can use deconstruction like this with componentN()
+    val person5 = Person5("luis", 30)
+    val (name,age ) = person5
+
+
+    // can use dconstruction like this too.
+    val string = "a:b:c"
+    val (letter1, letter2,l letter3) = string.split(":")
+
+
+
+
+    var b = Mammal("wubby")
+    println(b.name)
+
+    var bb = Cat("tubby")
+    println(bb.name)
+    println(b.name)
 }
+
+interface Terminator { // an interface is an even more 100% abstract class
+    // all functions by default are abstract
+    fun sayIllBeBack()
+    fun sayAreYouSarahConnor()
+}
+
+class Ahnold: Terminator { // must override all methods in the interface. a contract
+    override fun sayIllBeBack() {
+        println("Ahh be bach")
+    }
+    override fun sayAreYouSarahConnor() {
+        println("ah yew sa-aa conn-uh")
+    }
+}
+
+class PeeWee: Terminator {
+    override fun sayIllBeBack() {
+        println("Ahhhhhhhh")
+    }
+    override fun sayAreYouSarahConnor() {
+        println("Ahhhhhhhh")
+    }
+}
+
+fun terminatorScript(
+        terminator: Terminator
+) {
+    terminator.sayAreYouSarahConnor()
+    terminator.sayIllBeBack()
+}
+

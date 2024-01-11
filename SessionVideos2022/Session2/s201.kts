@@ -48,7 +48,6 @@ fun factorial(n : Int) : Int {
     if(n == 0 || n ==1) { return 1}
     else{ return factorial(n-1) * n}
 }
-
 // In Kotlin, the tailrec keyword is used to indicate that a function is tail-recursive.
 // Tail recursion is a specific form of recursion where the recursive call is the last operation performed in the function.
 // This optimization allows the Kotlin compiler to optimize the recursion into an iterative loop,
@@ -81,3 +80,25 @@ tailrec fun createStringOfNumbers3(numberOfThingsToPrint : Int, answerSoFar : St
 }
 
 println(createStringOfNumbers3(4, ""))
+
+// not a good design for a Location
+open class Location private constructor( // with this private constructor, we are forced to call one of the two bottom constructors. its a way
+        // of making a class a bit more flexible, but you can use default values instead. user needs to pass lat and lon or the street,city,state,zip
+        val lat : Double,
+        val lon : Double,
+        val street : String,
+        val city : String,
+        val state : String,
+        val zip : String
+) {
+    constructor(lat: Double, lon: Double): this(lat, lon, "", "", "","")
+    constructor(
+            street : String,
+            city : String,
+            state : String,
+            zip : String
+    ): this(0.0, 0.0, street, city, state, zip)
+}
+
+
+
