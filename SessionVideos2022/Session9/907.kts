@@ -75,4 +75,4 @@ fun main() {
 
 // know what is refied, and how it works at a high level and how you can use it to pass
 // passing in generic, upper bounds
-// everything up to 903.kts. two types of contrains on generics. 
+// everything up to 903.kts. two types of contrains on generics.
