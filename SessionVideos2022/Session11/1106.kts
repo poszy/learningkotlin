@@ -1,19 +1,21 @@
-
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.awt.BorderLayout
-import javax.swing.Box
 import javax.swing.BoxLayout
 import javax.swing.JButton
 import javax.swing.JFrame
 import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.WindowConstants
-import javax.swing.text.View
+
+// flow are a pair of threads that are sending and receving data
+// homework here.
 
 data class Movie(
         val id: String,
@@ -23,7 +25,7 @@ data class Movie(
 
 class DAO {
     suspend fun getMovie(id: String) = withContext(Dispatchers.IO) {
-        delay(1000) // simulate super slow db access
+//        delay(1000) // simulate super slow db access
         when (id) {
             "terminator" -> Movie("terminator", "The Terminator", 1984)
             "transporter" -> Movie("transporter", "The Transporter", 2002)
@@ -38,17 +40,14 @@ class ViewModel {
     private val context = CoroutineName("view model context")
     private val scope = CoroutineScope(context)
 
-    var currentMovie: Movie? = null
-        private set
-
-    var onMovieChanged: ((Movie?) -> Unit)? = null
+    private val _movieFlow = MutableStateFlow<Movie?>(null) // a bucket that is going ot
+    val movieFlow: Flow<Movie?> = _movieFlow
 
     fun loadMovie(id: String) {
         scope.launch {
             val movie = dao.getMovie(id)
-            currentMovie = movie
-            onMovieChanged?.invoke(movie) // invoke means to run
-//          similar as onMovieChanged?.let { it(movie) }
+            _movieFlow.emit(movie) // emit is general for MutableFlow
+//            _movieFlow.value = movie // works as well
         }
     }
 }
@@ -85,9 +84,12 @@ fun main() {
                 }
         )
 
-        viewModel.onMovieChanged = { movie ->
-            titleLabel.text = "Title: ${movie?.title ?: ""}"
-            yearLabel.text = "Year: ${movie?.year ?: ""}"
+        val scope = MainScope()
+        scope.launch {
+            viewModel.movieFlow.collect { movie ->
+                titleLabel.text = "Title: ${movie?.title ?: ""}"
+                yearLabel.text = "Year: ${movie?.year ?: ""}"
+            }
         }
 
         defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
@@ -95,4 +97,3 @@ fun main() {
         isVisible = true
     }
 }
-
